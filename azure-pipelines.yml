@@ -1,0 +1,27 @@
+trigger:
+  - v1  # Monitora a branch v1
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  NODE_VERSION: '18.x'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: $(NODE_VERSION)
+  displayName: 'Instalar Node.js'
+
+- script: |
+    npm ci
+  displayName: 'Instalar dependências'
+
+- script: |
+    npm run build
+  displayName: 'Build do projeto'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)/.next'
+    ArtifactName: 'build'
