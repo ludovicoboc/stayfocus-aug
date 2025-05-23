@@ -1,15 +1,16 @@
 'use client'; // Necessário para usar hooks como useState e useEffect, e o store Zustand
 
-import React, { useState } from 'react'; // Adicionar useState
+import React, { useState, Suspense, lazy } from 'react';
 import { useSimuladoStore } from '@/app/stores/simuladoStore';
 // Padronizando a forma de importação para todos os componentes
 import SimuladoLoader from '@/app/components/estudos/simulado/SimuladoLoader';
 import SimuladoReview from '@/app/components/estudos/simulado/SimuladoReview';
-import SimuladoResults from '@/app/components/estudos/simulado/SimuladoResults';
-import HistoricoModal from '@/app/components/estudos/simulado/HistoricoModal'; // <-- Corrigir importação sem extensão
-import { Container } from '@/app/components/ui/Container'; // Usando um container genérico existente
-import { Button } from '@/app/components/ui/Button'; // Usando botão existente
-import { History } from 'lucide-react'; // <-- Importar ícone de histórico
+// Lazy loading para o componente que usa recharts
+const SimuladoResults = lazy(() => import('@/app/components/estudos/simulado/SimuladoResults'));
+import HistoricoModal from '@/app/components/estudos/simulado/HistoricoModal';
+import { Container } from '@/app/components/ui/Container';
+import { Button } from '@/app/components/ui/Button';
+import { History } from 'lucide-react';
 
 const SimuladoPage: React.FC = () => {
   const { status, resetSimulado } = useSimuladoStore();
@@ -20,9 +21,27 @@ const SimuladoPage: React.FC = () => {
       case 'reviewing':
         return <SimuladoReview />;
       case 'results':
-        return <SimuladoResults />;
-      case 'loading': // Poderia ter um estado de loading visual
-        return <div>Carregando simulado...</div>;
+        return (
+          <Suspense fallback={
+            <div className="flex items-center justify-center p-8">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-gray-600 dark:text-gray-400">Carregando resultados...</p>
+              </div>
+            </div>
+          }>
+            <SimuladoResults />
+          </Suspense>
+        );
+      case 'loading': // Estado de loading visual melhorado
+        return (
+          <div className="flex items-center justify-center p-8">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-gray-600 dark:text-gray-400">Carregando simulado...</p>
+            </div>
+          </div>
+        );
       case 'idle':
       default:
         return <SimuladoLoader />;
