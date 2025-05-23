@@ -4,9 +4,9 @@ import { Suspense, lazy } from 'react'
 import dynamic from 'next/dynamic'
 import { RegistroMedicamentos } from '@/app/components/saude/RegistroMedicamentos'
 
-// Importação dinâmica para o componente MonitoramentoHumor que usa gráficos
+// Importação dinâmica para o wrapper do componente MonitoramentoHumor
 const MonitoramentoHumor = dynamic(
-  () => import('@/app/components/saude/MonitoramentoHumor'),
+  () => import('@/app/components/saude/MonitoramentoHumorWrapper'),
   {
     ssr: false, // Desabilita SSR pois pode depender de APIs do browser
     loading: () => (

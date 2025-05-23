@@ -1,0 +1,33 @@
+trigger:
+  branches:
+    include:
+    - v1
+variables:
+- name: NODE_VERSION
+  value: '18.x'
+stages:
+- stage: __default
+  jobs:
+  - job: Job
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: $(NODE_VERSION)
+      displayName: 'Instalar Node.js'
+    - task: CmdLine@2
+      displayName: 'Instalar dependências'
+      inputs:
+        script: |
+          npm ci
+    - task: CmdLine@2
+      displayName: 'Build do projeto'
+      inputs:
+        script: |
+          npm run build
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(System.DefaultWorkingDirectory)/.next'
+        ArtifactName: 'build'
+

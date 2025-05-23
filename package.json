@@ -16,12 +16,13 @@
     "optimize": "node analyze-bundles.js"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.17",
+    "@headlessui/react": "^2.2.4",
     "@types/node-fetch": "^2.6.12",
     "@types/stream-buffers": "^3.0.7",
     "@vercel/speed-insights": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "critters": "^0.0.23",
     "date-fns": "^4.1.0",
     "googleapis": "^148.0.0",
     "iron-session": "^8.0.4",

@@ -1,15 +1,15 @@
+'use client';
+
+import { useParams } from 'next/navigation';
 import { DetalhesReceita } from '../../components/receitas/DetalhesReceita';
 
-interface ReceitaDetalhesPageProps {
-  params: {
-    id: string;
-  };
-}
-
 // This page will be dynamically rendered based on the [id] parameter
-export default function ReceitaDetalhesPage({ params }: ReceitaDetalhesPageProps) {
+export default function ReceitaDetalhesPage() {
+  const params = useParams();
+  const id = params?.id ? (Array.isArray(params.id) ? params.id[0] : params.id) : '';
+  
   // The DetalhesReceita component handles fetching the recipe data using the id
-  return <DetalhesReceita id={params.id} />;
+  return <DetalhesReceita id={id} />;
 }
 
 // Optional: Add generateStaticParams if you want to pre-render some recipe pages at build time

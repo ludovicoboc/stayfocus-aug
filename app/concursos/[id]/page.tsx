@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { useConcursosStore } from '@/app/stores/concursosStore';
 import { useQuestoesStore, Questao } from '@/app/stores/questoesStore';
 import { Button } from '@/app/components/ui/Button';
@@ -14,12 +14,6 @@ import { ptBR } from 'date-fns/locale';
 import { Award, Calendar, Edit, ExternalLink, Trash, BookOpen, ChevronDown, ChevronUp, Star, StarOff, Edit2, X } from 'lucide-react';
 import { Input } from '@/app/components/ui/Input';
 
-interface DetalhesConcursoPageProps {
-  params: {
-    id: string;
-  };
-}
-
 interface SimuladoFavorito {
   id: string;
   nome: string;
@@ -27,7 +21,9 @@ interface SimuladoFavorito {
   link: string;
 }
 
-export default function DetalhesConcursoPage({ params }: DetalhesConcursoPageProps) {
+export default function DetalhesConcursoPage() {
+  const params = useParams();
+  const id = params?.id ? (Array.isArray(params.id) ? params.id[0] : params.id) : '';
   const router = useRouter();
   const { concursos, removerConcurso, atualizarProgresso } = useConcursosStore();
   const [showQuestaoModal, setShowQuestaoModal] = useState(false);
@@ -44,11 +40,11 @@ export default function DetalhesConcursoPage({ params }: DetalhesConcursoPagePro
   const [abaAtiva, setAbaAtiva] = useState('conteudo');
 
   // Collapse/expand do conteúdo programático
-  const concurso = concursos.find(c => c.id === params.id);
+  const concurso = concursos.find(c => c.id === id);
   const [disciplinasAbertas, setDisciplinasAbertas] = useState<{ [disciplina: string]: boolean }>({});
 
   // Simulados favoritos (armazenados no localStorage por concurso)
-  const storageKey = `simulados_favoritos_${params.id}`;
+  const storageKey = `simulados_favoritos_${id}`;
   const [simuladosFavoritos, setSimuladosFavoritos] = useState<SimuladoFavorito[]>(() => {
     if (typeof window !== 'undefined') {
       try {
